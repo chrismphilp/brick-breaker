@@ -6,9 +6,8 @@ import engine.IGameLogic;
 public class Main {
     public static void main(String[] args) {
         try {
-            boolean vSync = true;
             IGameLogic gameLogic = new BrickBreaker();
-            GameEngine gameEng = new GameEngine("BrickBreaker", 600, 480, vSync, gameLogic);
+            GameEngine gameEng = new GameEngine("BrickBreaker", 600, 480, true, gameLogic);
             gameEng.run();
         } catch (Exception excp) {
             excp.printStackTrace();

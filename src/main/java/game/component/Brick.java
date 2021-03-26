@@ -6,17 +6,16 @@ public class Brick extends AbstractEntity {
         super(x, y, width, height);
     }
 
-    @Override
-    public float[] getVertices() {
-        return new float[]{
+    public void updateVertices() {
+        setVertices(new float[]{
                 // Top half
-                0.1f, 0.1f, 0.0f,
-                0.1f, -0.1f, 0.0f,
-                0.1f, 0.1f, 0.0f,
+                getX() + getWidth(), getY() - getHeight(), 0.0f,
+                getX() - getWidth(), getY() + getHeight(), 0.0f,
+                getX() + getWidth(), getY() + getHeight(), 0.0f,
                 // Bottom half
-                0.1f, 0.1f, 0.0f,
-                0.1f, -0.1f, 0.0f,
-                0.1f, -0.1f, 0.0f
-        };
+                getX() - getWidth(), getY() + getHeight(), 0.0f,
+                getX() - getWidth(), getY() - getHeight(), 0.0f,
+                getX() + getWidth(), getY() - getHeight(), 0.0f
+        });
     }
 }

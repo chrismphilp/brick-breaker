@@ -6,7 +6,7 @@ import lombok.Data;
 public abstract class AbstractEntity implements Entity {
 
     private float x, y, height, width;
-    private float[] vertices;
+    private float[] vertices = new float[3];
 
     public AbstractEntity(float x, float y, float width, float height) {
         this.x = x;

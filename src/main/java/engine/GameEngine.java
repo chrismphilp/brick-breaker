@@ -4,7 +4,7 @@ public class GameEngine implements Runnable {
 
     public static final int TARGET_FPS = 75;
 
-    public static final int TARGET_UPS = 30;
+    public static final int TARGET_UPS = 60;
 
     private final Window window;
 
@@ -12,7 +12,7 @@ public class GameEngine implements Runnable {
 
     private final IGameLogic gameLogic;
 
-    public GameEngine(String windowTitle, int width, int height, boolean vSync, IGameLogic gameLogic) throws Exception {
+    public GameEngine(String windowTitle, int width, int height, boolean vSync, IGameLogic gameLogic) {
         window = new Window(windowTitle, width, height, vSync);
         this.gameLogic = gameLogic;
         timer = new Timer();
@@ -39,8 +39,7 @@ public class GameEngine implements Runnable {
         float accumulator = 0f;
         float interval = 1f / TARGET_UPS;
 
-        boolean running = true;
-        while (running && !window.windowShouldClose()) {
+        while (!window.windowShouldClose()) {
             elapsedTime = timer.getElapsedTime();
             accumulator += elapsedTime;
 

@@ -11,25 +11,21 @@ public class Ball extends AbstractEntity {
     private Direction xDirection = Direction.LEFT;
     private Direction yDirection = Direction.DOWN;
 
-    private static final float X_OFFSET = 0.00f;
+    private static final float X_OFFSET = 0.015f;
     private static final float Y_OFFSET = 0.015f;
 
     public Ball(float x, float y, float width, float height) {
         super(x, y, width, height);
     }
 
-    public void updateVertices(boolean hasXIntersected, boolean hasYIntersected) {
+    public void update() {
         updateDirectionBasedOnWindowIntersections();
-        updateDirectionBasedOnObjectIntersections(hasXIntersected, hasYIntersected);
         updateOffsets();
         setVertices(calculateCircleVertices());
     }
 
-    private void updateDirectionBasedOnObjectIntersections(boolean hasXIntersected, boolean hasYIntersected) {
-        if (hasXIntersected) {
-            xDirection = xDirection.equals(Direction.LEFT) ? Direction.RIGHT : Direction.LEFT;
-        }
-        if (hasYIntersected) {
+    public void updateDirectionBasedOnObjectIntersections(boolean hasXIntersected, boolean hasYIntersected) {
+        if (hasXIntersected && hasYIntersected) {
             yDirection = yDirection.equals(Direction.UP) ? Direction.DOWN : Direction.UP;
         }
     }

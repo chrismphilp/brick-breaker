@@ -5,6 +5,7 @@ import engine.Window;
 import game.component.Ball;
 import game.component.Brick;
 import game.component.Paddle;
+import game.util.BrickUtility;
 import game.util.Direction;
 import game.util.IntersectionUtility;
 
@@ -13,16 +14,25 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 
 public class BrickBreaker implements IGameLogic {
 
-    private final Paddle paddle;
-    private final Ball ball;
-    private final Brick brick;
     private final Renderer renderer;
+    // Paddle
+    private final Paddle paddle;
+    private static final float PADDLE_WIDTH = 0.1f;
+    private static final float PADDLE_HEIGHT = 0.015f;
+    // Ball
+    private final Ball ball;
+    // Bricks
+    private final int brickRows = 8;
+    private final int brickColumns = 5;
+    private final Brick[][] brickArray;
+    private static final float BRICK_HEIGHT = 0.035f;
+    private static final float BRICK_WIDTH = 0.1f;
 
     public BrickBreaker() {
-        this.paddle = new Paddle(0, -0.75f, 5, 5);
-        this.ball = new Ball(0, 0, 5, 5);
-        this.brick = new Brick(0, 1, 5, 5);
         renderer = new Renderer();
+        this.paddle = new Paddle(0, -0.75f, PADDLE_WIDTH, PADDLE_HEIGHT);
+        this.ball = new Ball(0, 0, 5, 5);
+        this.brickArray = BrickUtility.generateBricks(brickRows, brickColumns, BRICK_WIDTH, BRICK_HEIGHT);
     }
 
     @Override
@@ -38,16 +48,25 @@ public class BrickBreaker implements IGameLogic {
         } else if (window.isKeyPressed(GLFW_KEY_RIGHT)) {
             direction = Direction.RIGHT;
         }
-        paddle.update(direction);
-        ball.updateVertices(
-                IntersectionUtility.hasBallIntersectedVerticallyWithPaddle(paddle, ball),
-                IntersectionUtility.hasBallIntersectedHorizontallyWithPaddle(paddle, ball)
-        );
+        paddle.setDirection(direction);
     }
 
     @Override
     public void update(float interval) {
-        System.out.format("\n Ball: x: %s, y: %s, Paddle: x: %s, y: %s", ball.getX(), ball.getY(), paddle.getX(), paddle.getY());
+        paddle.update();
+        ball.updateDirectionBasedOnObjectIntersections(
+                IntersectionUtility.hasBallIntersectedVerticallyWithRectangle(paddle, ball),
+                IntersectionUtility.hasBallIntersectedHorizontallyWithRectangle(paddle, ball)
+        );
+        for (int x = 0; x < brickRows; x++) {
+            for (int y = 0; y < brickColumns; y++) {
+                ball.updateDirectionBasedOnObjectIntersections(
+                        IntersectionUtility.hasBallIntersectedVerticallyWithRectangle(brickArray[x][y], ball),
+                        IntersectionUtility.hasBallIntersectedHorizontallyWithRectangle(brickArray[x][y], ball)
+                );
+            }
+        }
+        ball.update();
     }
 
     @Override
@@ -56,6 +75,12 @@ public class BrickBreaker implements IGameLogic {
         renderer.clear();
         renderer.render(window, paddle.getVertices(), 3);
         renderer.render(window, ball.getVertices(), 3);
+
+        for (int x = 0; x < brickRows; x++) {
+            for (int y = 0; y < brickColumns; y++) {
+                renderer.render(window, brickArray[x][y].getVertices(), 3);
+            }
+        }
     }
 
     @Override

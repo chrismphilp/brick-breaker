@@ -1,14 +1,20 @@
 package game.component;
 
 import game.util.Direction;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class Paddle extends AbstractEntity {
+
+    private Direction direction = Direction.STATIONARY;
 
     public Paddle(float x, float y, float width, float height) {
         super(x, y, width, height);
     }
 
-    public void update(Direction direction) {
+    public void update() {
         switch (direction) {
             case LEFT -> setX(getX() - 0.025f);
             case RIGHT -> setX(getX() + 0.025f);
@@ -19,13 +25,13 @@ public class Paddle extends AbstractEntity {
     private void updateVertices() {
         setVertices(new float[]{
                 // Top half
-                getX() + 0.1f, getY() - 0.025f, 0.0f,
-                getX() - 0.1f, getY() + 0.025f, 0.0f,
-                getX() + 0.1f, getY() + 0.025f, 0.0f,
+                getX() + getWidth(), getY() - getHeight(), 0.0f,
+                getX() - getWidth(), getY() + getHeight(), 0.0f,
+                getX() + getWidth(), getY() + getHeight(), 0.0f,
                 // Bottom half
-                getX() - 0.1f, getY() + 0.025f, 0.0f,
-                getX() - 0.1f, getY() - 0.025f, 0.0f,
-                getX() + 0.1f, getY() - 0.025f, 0.0f
+                getX() - getWidth(), getY() + getHeight(), 0.0f,
+                getX() - getWidth(), getY() - getHeight(), 0.0f,
+                getX() + getWidth(), getY() - getHeight(), 0.0f
         });
     }
 }
