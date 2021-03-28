@@ -8,17 +8,25 @@ import lombok.experimental.UtilityClass;
 public final class IntersectionUtility {
 
     public static boolean hasIntersected(AbstractEntity entity, Ball ball) {
-        return IntersectionUtility.hasBallIntersectedVerticallyWithRectangle(entity, ball) &&
-                IntersectionUtility.hasBallIntersectedHorizontallyWithRectangle(entity, ball);
+        return IntersectionUtility.hasBallIntersectedWithTopOfRectangle(entity, ball) &&
+                IntersectionUtility.hasBallIntersectedWithBottomOfRectangle(entity, ball) &&
+                IntersectionUtility.hasBallIntersectedWithLeftOfRectangle(entity, ball) &&
+                IntersectionUtility.hasBallIntersectedWithRightOfRectangle(entity, ball);
     }
 
-    private static boolean hasBallIntersectedVerticallyWithRectangle(AbstractEntity entity, Ball ball) {
-        return (entity.getY() + entity.getHeight()) >= (ball.getY() - ball.getHeight()) &&
-                (entity.getY() - entity.getHeight()) <= (ball.getY() - ball.getHeight());
+    private static boolean hasBallIntersectedWithTopOfRectangle(AbstractEntity entity, Ball ball) {
+        return (entity.getY() + entity.getHeight()) >= (ball.getY() - ball.getHeight());
     }
 
-    private static boolean hasBallIntersectedHorizontallyWithRectangle(AbstractEntity entity, Ball ball) {
-        return (entity.getX() - entity.getWidth()) <= (ball.getX() - ball.getWidth()) &&
-                (entity.getX() + entity.getWidth()) >= (ball.getX() - ball.getWidth());
+    private static boolean hasBallIntersectedWithBottomOfRectangle(AbstractEntity entity, Ball ball) {
+        return (entity.getY() - entity.getHeight()) <= (ball.getY() + ball.getHeight());
+    }
+
+    private static boolean hasBallIntersectedWithLeftOfRectangle(AbstractEntity entity, Ball ball) {
+        return (entity.getX() - entity.getWidth()) <= (ball.getX() + ball.getWidth());
+    }
+
+    private static boolean hasBallIntersectedWithRightOfRectangle(AbstractEntity entity, Ball ball) {
+        return (entity.getX() + entity.getWidth()) >= (ball.getX() - ball.getWidth());
     }
 }

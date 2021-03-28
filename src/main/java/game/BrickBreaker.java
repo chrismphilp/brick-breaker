@@ -56,12 +56,16 @@ public class BrickBreaker implements IGameLogic {
     public void update(float interval) {
         paddle.update();
         ball.updateDirectionBasedOnObjectIntersections(IntersectionUtility.hasIntersected(paddle, ball));
+        outerLoop:
         for (int x = 0; x < brickRows; x++) {
             for (int y = 0; y < brickColumns; y++) {
                 if (!brickArray[x][y].isHit()) {
                     boolean hasIntersected = IntersectionUtility.hasIntersected(brickArray[x][y], ball);
                     ball.updateDirectionBasedOnObjectIntersections(hasIntersected);
-                    if (hasIntersected) brickArray[x][y].setHit(true);
+                    if (hasIntersected) {
+                        brickArray[x][y].setHit(true);
+                        break outerLoop;
+                    }
                 }
             }
         }
