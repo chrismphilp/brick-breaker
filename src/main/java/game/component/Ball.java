@@ -5,7 +5,6 @@ import game.util.Direction;
 public class Ball extends AbstractEntity {
 
     private static final float PI = 3.141592f;
-    private static final float RADIUS = 0.025f;
     private static final int GRADATION = 8;
 
     private Direction xDirection = Direction.LEFT;
@@ -24,8 +23,8 @@ public class Ball extends AbstractEntity {
         setVertices(calculateCircleVertices());
     }
 
-    public void updateDirectionBasedOnObjectIntersections(boolean hasXIntersected, boolean hasYIntersected) {
-        if (hasXIntersected && hasYIntersected) {
+    public void updateDirectionBasedOnObjectIntersections(boolean hasIntersected) {
+        if (hasIntersected) {
             yDirection = yDirection.equals(Direction.UP) ? Direction.DOWN : Direction.UP;
         }
     }
@@ -72,8 +71,8 @@ public class Ball extends AbstractEntity {
     }
 
     private void calculateLocation(float[] storage, int location, float div) {
-        storage[location] = (float) (RADIUS * Math.cos(div)) + getX();
-        storage[location + 1] = (float) (RADIUS * Math.sin(div)) + getY();
+        storage[location] = (float) (getHeight() * Math.cos(div)) + getX();
+        storage[location + 1] = (float) (getWidth() * Math.sin(div)) + getY();
         storage[location + 2] = 0;
     }
 }

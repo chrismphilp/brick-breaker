@@ -7,13 +7,18 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public final class IntersectionUtility {
 
-    public static boolean hasBallIntersectedVerticallyWithRectangle(AbstractEntity entity, Ball ball) {
-        return (entity.getY() + 0.015f) >= (ball.getY() - 0.025f) &&
-                (entity.getY() - 0.015f) <= (ball.getY() - 0.025f);
+    public static boolean hasIntersected(AbstractEntity entity, Ball ball) {
+        return IntersectionUtility.hasBallIntersectedVerticallyWithRectangle(entity, ball) &&
+                IntersectionUtility.hasBallIntersectedHorizontallyWithRectangle(entity, ball);
     }
 
-    public static boolean hasBallIntersectedHorizontallyWithRectangle(AbstractEntity entity, Ball ball) {
-        return (entity.getX() - 0.1f) <= (ball.getX() - 0.025f) &&
-                (entity.getX() + 0.1f) >= (ball.getX() - 0.025f);
+    private static boolean hasBallIntersectedVerticallyWithRectangle(AbstractEntity entity, Ball ball) {
+        return (entity.getY() + entity.getHeight()) >= (ball.getY() - ball.getHeight()) &&
+                (entity.getY() - entity.getHeight()) <= (ball.getY() - ball.getHeight());
+    }
+
+    private static boolean hasBallIntersectedHorizontallyWithRectangle(AbstractEntity entity, Ball ball) {
+        return (entity.getX() - entity.getWidth()) <= (ball.getX() - ball.getWidth()) &&
+                (entity.getX() + entity.getWidth()) >= (ball.getX() - ball.getWidth());
     }
 }

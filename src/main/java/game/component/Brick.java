@@ -1,6 +1,13 @@
 package game.component;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class Brick extends AbstractEntity {
+
+    private boolean hit;
 
     public Brick(float x, float y, float width, float height) {
         super(x, y, width, height);

@@ -21,6 +21,7 @@ public class BrickBreaker implements IGameLogic {
     private static final float PADDLE_HEIGHT = 0.015f;
     // Ball
     private final Ball ball;
+    private static final float RADIUS = 0.025f;
     // Bricks
     private final int brickRows = 8;
     private final int brickColumns = 5;
@@ -31,7 +32,7 @@ public class BrickBreaker implements IGameLogic {
     public BrickBreaker() {
         renderer = new Renderer();
         this.paddle = new Paddle(0, -0.75f, PADDLE_WIDTH, PADDLE_HEIGHT);
-        this.ball = new Ball(0, 0, 5, 5);
+        this.ball = new Ball(0, 0, RADIUS, RADIUS);
         this.brickArray = BrickUtility.generateBricks(brickRows, brickColumns, BRICK_WIDTH, BRICK_HEIGHT);
     }
 
@@ -54,16 +55,14 @@ public class BrickBreaker implements IGameLogic {
     @Override
     public void update(float interval) {
         paddle.update();
-        ball.updateDirectionBasedOnObjectIntersections(
-                IntersectionUtility.hasBallIntersectedVerticallyWithRectangle(paddle, ball),
-                IntersectionUtility.hasBallIntersectedHorizontallyWithRectangle(paddle, ball)
-        );
+        ball.updateDirectionBasedOnObjectIntersections(IntersectionUtility.hasIntersected(paddle, ball));
         for (int x = 0; x < brickRows; x++) {
             for (int y = 0; y < brickColumns; y++) {
-                ball.updateDirectionBasedOnObjectIntersections(
-                        IntersectionUtility.hasBallIntersectedVerticallyWithRectangle(brickArray[x][y], ball),
-                        IntersectionUtility.hasBallIntersectedHorizontallyWithRectangle(brickArray[x][y], ball)
-                );
+                if (!brickArray[x][y].isHit()) {
+                    boolean hasIntersected = IntersectionUtility.hasIntersected(brickArray[x][y], ball);
+                    ball.updateDirectionBasedOnObjectIntersections(hasIntersected);
+                    if (hasIntersected) brickArray[x][y].setHit(true);
+                }
             }
         }
         ball.update();
@@ -78,7 +77,9 @@ public class BrickBreaker implements IGameLogic {
 
         for (int x = 0; x < brickRows; x++) {
             for (int y = 0; y < brickColumns; y++) {
-                renderer.render(window, brickArray[x][y].getVertices(), 3);
+                if (!brickArray[x][y].isHit()) {
+                    renderer.render(window, brickArray[x][y].getVertices(), 3);
+                }
             }
         }
     }
