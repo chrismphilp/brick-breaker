@@ -8,10 +8,10 @@ import lombok.experimental.UtilityClass;
 public final class IntersectionUtility {
 
     public static boolean hasIntersected(AbstractEntity entity, Ball ball) {
-        return IntersectionUtility.hasBallIntersectedWithTopOfRectangle(entity, ball) &&
-                IntersectionUtility.hasBallIntersectedWithBottomOfRectangle(entity, ball) &&
-                IntersectionUtility.hasBallIntersectedWithLeftOfRectangle(entity, ball) &&
-                IntersectionUtility.hasBallIntersectedWithRightOfRectangle(entity, ball);
+        return hasBallIntersectedWithTopOfRectangle(entity, ball) &&
+                hasBallIntersectedWithBottomOfRectangle(entity, ball) &&
+                hasBallIntersectedWithLeftOfRectangle(entity, ball) &&
+                hasBallIntersectedWithRightOfRectangle(entity, ball);
     }
 
     private static boolean hasBallIntersectedWithTopOfRectangle(AbstractEntity entity, Ball ball) {

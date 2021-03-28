@@ -1,7 +1,11 @@
 package game.component;
 
 import game.util.Direction;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class Ball extends AbstractEntity {
 
     private static final float PI = 3.141592f;
@@ -10,11 +14,13 @@ public class Ball extends AbstractEntity {
     private Direction xDirection = Direction.LEFT;
     private Direction yDirection = Direction.DOWN;
 
-    private static final float X_OFFSET = 0.015f;
-    private static final float Y_OFFSET = 0.015f;
+    private float xOffset;
+    private float yOffset;
 
-    public Ball(float x, float y, float width, float height) {
+    public Ball(float x, float y, float xOffset, float yOffset, float width, float height) {
         super(x, y, width, height);
+        setXOffset(xOffset);
+        setYOffset(yOffset);
     }
 
     public void update() {
@@ -23,7 +29,16 @@ public class Ball extends AbstractEntity {
         setVertices(calculateCircleVertices());
     }
 
-    public void updateDirectionBasedOnObjectIntersections(boolean hasIntersected) {
+    public void updateDirectionBasedOnPaddleIntersections(boolean hasIntersected, float paddleCentre, float paddleWidth) {
+        if (hasIntersected) {
+            setXOffset(0.015f * (1 / (paddleWidth / (Math.abs(getX() - paddleCentre)))));
+            if (xOffset == Float.POSITIVE_INFINITY || xOffset == Float.NEGATIVE_INFINITY) setXOffset(0);
+            System.out.format("x: %s, xOffset: %s, paddleCentre: %s, paddleWidth: %s. \n", getX(), xOffset, paddleCentre, paddleWidth);
+            yDirection = yDirection.equals(Direction.UP) ? Direction.DOWN : Direction.UP;
+        }
+    }
+
+    public void updateDirectionBasedOnBrickIntersections(boolean hasIntersected) {
         if (hasIntersected) {
             yDirection = yDirection.equals(Direction.UP) ? Direction.DOWN : Direction.UP;
         }
@@ -39,13 +54,13 @@ public class Ball extends AbstractEntity {
 
     private void updateOffsets() {
         switch (xDirection) {
-            case LEFT -> setX(getX() - X_OFFSET);
-            case RIGHT -> setX(getX() + X_OFFSET);
+            case LEFT -> setX(getX() - getXOffset());
+            case RIGHT -> setX(getX() + getXOffset());
         }
 
         switch (yDirection) {
-            case UP -> setY(getY() + Y_OFFSET);
-            case DOWN -> setY(getY() - Y_OFFSET);
+            case UP -> setY(getY() + getYOffset());
+            case DOWN -> setY(getY() - getYOffset());
         }
     }
 

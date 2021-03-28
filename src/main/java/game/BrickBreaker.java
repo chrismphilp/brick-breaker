@@ -5,10 +5,10 @@ import engine.Window;
 import game.component.Ball;
 import game.component.Brick;
 import game.component.Paddle;
-import game.util.BrickUtility;
 import game.util.Direction;
-import game.util.IntersectionUtility;
 
+import static game.util.BrickUtility.generateBricks;
+import static game.util.IntersectionUtility.hasIntersected;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 
@@ -21,6 +21,8 @@ public class BrickBreaker implements IGameLogic {
     private static final float PADDLE_HEIGHT = 0.015f;
     // Ball
     private final Ball ball;
+    private static final float X_OFFSET = 0f;
+    private static final float Y_OFFSET = 0.015f;
     private static final float RADIUS = 0.025f;
     // Bricks
     private final int brickRows = 8;
@@ -32,8 +34,8 @@ public class BrickBreaker implements IGameLogic {
     public BrickBreaker() {
         renderer = new Renderer();
         this.paddle = new Paddle(0, -0.75f, PADDLE_WIDTH, PADDLE_HEIGHT);
-        this.ball = new Ball(0, 0, RADIUS, RADIUS);
-        this.brickArray = BrickUtility.generateBricks(brickRows, brickColumns, BRICK_WIDTH, BRICK_HEIGHT);
+        this.ball = new Ball(0, 0, X_OFFSET, Y_OFFSET,  RADIUS, RADIUS);
+        this.brickArray = generateBricks(brickRows, brickColumns, BRICK_WIDTH, BRICK_HEIGHT);
     }
 
     @Override
@@ -55,13 +57,13 @@ public class BrickBreaker implements IGameLogic {
     @Override
     public void update(float interval) {
         paddle.update();
-        ball.updateDirectionBasedOnObjectIntersections(IntersectionUtility.hasIntersected(paddle, ball));
+        ball.updateDirectionBasedOnPaddleIntersections(hasIntersected(paddle, ball), paddle.getX(), paddle.getWidth());
         outerLoop:
         for (int x = 0; x < brickRows; x++) {
             for (int y = 0; y < brickColumns; y++) {
                 if (!brickArray[x][y].isHit()) {
-                    boolean hasIntersected = IntersectionUtility.hasIntersected(brickArray[x][y], ball);
-                    ball.updateDirectionBasedOnObjectIntersections(hasIntersected);
+                    boolean hasIntersected = hasIntersected(brickArray[x][y], ball);
+                    ball.updateDirectionBasedOnBrickIntersections(hasIntersected);
                     if (hasIntersected) {
                         brickArray[x][y].setHit(true);
                         break outerLoop;
