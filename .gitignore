@@ -1,15 +1,6 @@
+# CPP
+*.exe
+*.obj
 
-.gradle/
-build.gradle
-build/
-
-# Gradle
-gradle
-**/build/
-!src/**/build/
-gradle-app.setting
-!gradle-wrapper.jar
-.gradletasknamecache
-
-# IntelliJ
-.idea/
+# CLion
+.idea
