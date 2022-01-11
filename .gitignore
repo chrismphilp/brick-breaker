@@ -1,6 +1,7 @@
 # Executables
 *.exe
 *.out
+*.pbd
 *.app
 *.i*86
 *.x86_64
