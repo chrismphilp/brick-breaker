@@ -13,5 +13,8 @@
 *.obj
 *.elf
 
+# Libraries
+*.lib
+
 # CLion
 .idea
