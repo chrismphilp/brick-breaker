@@ -8,20 +8,20 @@ LDFLAGS = lib/glad/src/glad.o
 
 all: dirs libs compile run
 
-dirs:
+dirs: 
 	mkdir -p $(BUILD_DIR)
 
 libs:
 	cd lib/glad && $(CC) -o src/glad.o -Iinclude -c src/glad.c
 	cd lib/glfw && cmake . && make
 
-compile:
-	$(CC) main.cpp -o $(BUILD_DIR)/game.exe $(CFLAGS) $(LDFLAGS)
-
-run:
-	./build/game
-
 cr: compile run
 
-clean:
+compile: 
+	$(CC) main.cpp -o $(BUILD_DIR)/game.exe $(CFLAGS) $(LDFLAGS)
+
+run: 
+	./build/game
+
+clean: 
 	rm -rf $(BUILD_DIR)/*
