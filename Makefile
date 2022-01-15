@@ -18,7 +18,7 @@ libs:
 cr: compile run
 
 compile: 
-	$(CC) main.cpp -o $(BUILD_DIR)/game.exe $(CFLAGS) $(LDFLAGS)
+	$(CC) src/main.cpp -o $(BUILD_DIR)/game.exe $(CFLAGS) $(LDFLAGS)
 
 run: 
 	./build/game
