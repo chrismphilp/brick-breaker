@@ -1,27 +1,17 @@
+#pragma clang diagnostic ignored "-Wlanguage-extension-token"
+
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "shader.hpp"
+
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 static void processInput(GLFWwindow *window);
-static unsigned int compileShader(const char* vertexShaderSource, int* success, char infoLog[], int shaderType);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
-
-const char *vertexShaderSource = "#version 400 core\n"
-                                 "layout (location = 0) in vec3 aPos;\n"
-                                 "void main()\n"
-                                 "{\n"
-                                 "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-                                 "}\0";
-const char *fragmentShaderSource = "#version 400 core\n"
-                                   "out vec4 FragColor;\n"
-                                   "void main()\n"
-                                   "{\n"
-                                   "   FragColor = vec4(1.0f, -0.5f, 0.2f, 1.0f);\n"
-                                   "}\n\0";
 
 int main()
 {
@@ -56,24 +46,7 @@ int main()
         return -1;
     }
     
-    int success;
-    char infoLog[512];
-    unsigned int vertexShader = compileShader(vertexShaderSource, &success, infoLog, GL_VERTEX_SHADER);
-    unsigned int fragmentShader = compileShader(fragmentShaderSource, &success, infoLog, GL_FRAGMENT_SHADER);
-
-    // link shaders
-    unsigned int shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-    // check for linking errors
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if (!success) {
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-    }
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
+    Shader triangleShader("resources/shaders/shader.vs", "resources/shaders/fragment.fs");
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
@@ -96,7 +69,7 @@ int main()
 
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
-    
+
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
@@ -132,7 +105,7 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         // draw our first triangle
-        glUseProgram(shaderProgram);
+        triangleShader.Activate();
         glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         // glBindVertexArray(0); // no need to unbind it every time
@@ -147,30 +120,11 @@ int main()
     // ------------------------------------------------------------------------
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
-    glDeleteProgram(shaderProgram);
 
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------
     glfwTerminate();
     return 0;
-}
-
-static unsigned int compileShader(const char* vertexShaderSource, int* success, char infoLog[], int shaderType)
-{
-    // build and compile our shader program
-    // ------------------------------------
-    unsigned int shader = glCreateShader(shaderType);
-    glShaderSource(shader, 1, &vertexShaderSource, NULL);
-    glCompileShader(shader);
-
-    // check for shader compile errors
-    glGetShaderiv(shader, GL_COMPILE_STATUS, success);
-    if (!success)
-    {
-        glGetShaderInfoLog(shader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::COMPILATION_FAILED\n" << infoLog << std::endl;
-    }
-    return shader;
 }
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
