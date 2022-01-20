@@ -1,5 +1,3 @@
-#pragma clang diagnostic ignored "-Wlanguage-extension-token"
-
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -10,8 +8,8 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 static void processInput(GLFWwindow *window);
 
 // settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const GLuint SCR_WIDTH = 800;
+const GLuint SCR_HEIGHT = 600;
 
 int main()
 {
@@ -52,17 +50,17 @@ int main()
     // ------------------------------------------------------------------
     float vertices[] = {
         0.5f,  0.5f, 0.0f,  // top right
-         0.5f, -0.5f, 0.0f,  // bottom right
+        0.5f, -0.5f, 0.0f,  // bottom right
         -0.5f, -0.5f, 0.0f,  // bottom left
         -0.5f,  0.5f, 0.0f   // top left 
     };
 
-    unsigned int indices[] = { // note that we start from 0!
+    GLuint indices[] = { // note that we start from 0!
         0, 1, 3, // first triangle
         1, 2, 3 // second triangle
     };
 
-    unsigned int EBO, VBO, VAO;
+    GLuint EBO, VBO, VAO;
     
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
@@ -88,7 +86,7 @@ int main()
     glBindVertexArray(0);
 
     // uncomment this call to draw in wireframe polygons.
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     // render loop
     // -----------
@@ -106,6 +104,17 @@ int main()
 
         // draw our first triangle
         triangleShader.Activate();
+        int vertexColorLocation = glGetUniformLocation(triangleShader.programId, "outColor");
+
+        float timeValue = glfwGetTime();
+
+        glUniform4f(
+            vertexColorLocation, 
+            sin(timeValue) / 1.0f + 0.5f, 
+            sin(timeValue) / 2.0f + 0.5f, 
+            cos(timeValue) / 2.0f + 0.5f, 
+            1.0f);
+
         glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         // glBindVertexArray(0); // no need to unbind it every time

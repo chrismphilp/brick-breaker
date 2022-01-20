@@ -1,14 +1,14 @@
 #include "shader.hpp"
 
-Shader::Shader( std::string vsPath, std::string fsPath ) 
+Shader::Shader( const std::string &vsPath, const std::string &fsPath ) 
 {
     Load( vsPath, fsPath );
 }
 
-void Shader::Load(std::string vsPath, std::string fsPath) 
+void Shader::Load( const std::string &vsPath, const std::string &fsPath ) 
 {
-    std::string vShaderCode = LoadFile(vsPath);
-    std::string fShaderCode = LoadFile(fsPath);
+    const std::string vShaderCode = LoadFile(vsPath);
+    const std::string fShaderCode = LoadFile(fsPath);
 
     GLint success;
     GLchar infoLog[512];
@@ -22,7 +22,7 @@ void Shader::Load(std::string vsPath, std::string fsPath)
     glDeleteShader(fragmentId);
 }
 
-const std::string Shader::LoadFile( std::string path ) 
+const std::string Shader::LoadFile( const std::string &path ) 
 {
     std::string content;
     std::ifstream file;

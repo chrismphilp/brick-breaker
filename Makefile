@@ -20,7 +20,7 @@ libs:
 
 cr: compile run
 
-compile: $(OBJ)
+compile: $(OBJ) 
 	$(CC) -o $(BUILD_DIR)/game.exe $^ $(CFLAGS) $(LDFLAGS)
 
 run: 
