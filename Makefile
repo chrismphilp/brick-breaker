@@ -3,10 +3,10 @@ BUILD_DIR=build
 
 CFLAGS = -std=c++20 -O3 -Wall -Wextra -Wpedantic -Wstrict-aliasing -Wno-language-extension-token
 CFLAGS += -lmsvcrt -luser32 -lgdi32 -lshell32 -lglfw3
-CFLAGS += -Ilib/glad/include -Ilib/glfw/include -Ilib/stb
-LDFLAGS = lib/glad/src/glad.o 
+CFLAGS += -Ilib/glad/include -Ilib/glfw/include -Ilib/stb -Ilib/glm/glm
+LDFLAGS = lib/glad/src/glad.o
 
-SRC  = $(wildcard src/*.cpp)
+SRC  = $(wildcard src/*.cpp src/*/*.cpp)
 OBJ  = $(SRC:.c=.o)
 
 all: dirs libs compile run
